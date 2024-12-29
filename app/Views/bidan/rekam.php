@@ -29,12 +29,12 @@
         <div class="container">
           <div class="card">
             <div class="card-body">
-
               <form>
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="no_antrian" class="form-label">No Antrian</label>
                     <input type="text" class="form-control" id="no_antrian" name="no_antrian" required>
+                    
                   </div>
 
                   <div class="form-group col-md-6">
@@ -60,8 +60,8 @@
                   <label for="diagnosa">Diagnosa</label>
                   <textarea class="form-control" id="diagnosa" rows="" readonly>Flu</textarea>
                 </div>
+              </form>
             </div>
-
 
             <div class="table-responsive">
               <table class="table table-bordered table-striped">
@@ -77,44 +77,52 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <?php
+                  $grandTotal = 0; // Inisialisasi variabel grand total
+                  ?>
                   <?php $no = 1; ?>
                   <?php if (!empty($riwayat)): ?>
-                    <?php foreach ($riwayat as $item): ?>
-                      <tr>
-                        <td><?= $no++ ?></td>
-                        <td><?= $item['nm_user'] ?></td>
-                        <td><?= $item['nm_obat']  ?></td>
-                        <td><?= $item['keterangan'] ?></td>
-                      </tr>
-                    <?php endforeach; ?>
+                    <tr>
+                      <td><?= $no++ ?></td>
+                      <td><?= $riwayat['nm_user'] ?></td>
+                      <td><?= $obat['nm_obat'] ?></td>
+                      <td><?= $riwayat['keterangan'] ?></td>
+                      <td><?= $riwayat['jumlah'] ?></td>
+                      <td><?= number_format($obat['harga'], 0, ',', '.') ?></td>
+                      <td><?= number_format($riwayat['jumlah'] * $obat['harga'], 0, ',', '.') ?></td>
+                    </tr>
+                    <?php
+                    // Hitung grand total (jumlah * harga) dan tambahkan ke $grandTotal
+                    $grandTotal += $riwayat['jumlah'] * $obat['harga'];
+                    ?>
                   <?php else: ?>
                     <tr>
-                      <td colspan="4">Data riwayat tidak ditemukan</td>
+                      <td colspan="7">Data riwayat tidak ditemukan</td>
                     </tr>
                   <?php endif; ?>
-
-
                 </tbody>
+
                 <tfoot>
                   <tr>
                     <th colspan="6" class="text-right">Total</th>
-                    <th>Rp. 132,000</th>
+                    <th>Rp. <?= number_format($grandTotal, 0, ',', '.') ?></th>
                   </tr>
                 </tfoot>
               </table>
             </div>
 
             <div class="form-group text-right">
-              <a href="#" class="btn btn-primary">Cetak Resep Obat</a>
+              <a href="<?= base_url('/BidanController/generatePdfReport') ?>" class="btn btn-danger">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Cetak Resep Obat</p>
+              </a>
               <a href="#" class="btn btn-danger">Kembali</a>
               <a href="#" class="btn btn-success">Bayar</a>
             </div>
-            </form>
           </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 
   <!-- Tambahkan JS AdminLTE -->
