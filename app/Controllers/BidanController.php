@@ -64,6 +64,28 @@ class BidanController extends BaseController
         return view('bidan/rekam', $data);
     }
 
+    public function data_rekam()
+    {
+        // Ambil semua data dari tabel riwayat kesehatan menggunakan model
+        $riwayat = $this->RiwayatKesehatan->findAll();
+    
+        // Hitung grand total untuk jumlah obat
+        $grandTotal = 0;
+        foreach ($riwayat as $item) {
+            $grandTotal += (int)($item['jumlah'] ?? 0); // Tambahkan jumlah obat, pastikan nilai numerik
+        }
+    
+        // Siapkan data untuk dikirim ke view
+        $data = [
+            'riwayat' => $riwayat,
+            'grandTotal' => $grandTotal,
+        ];
+    
+        // Tampilkan data di view bidan/rekam
+        return view('bidan/rekam', $data);
+    }
+    
+
     // Menampilkan form pemeriksaan
     public function create($idPasien)
     {
